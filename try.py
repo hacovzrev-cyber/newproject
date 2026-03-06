@@ -306,7 +306,6 @@ def share112():
 
 def main():
     clear_screen()
-    ethan()
     open('/sdcard/boostphere/FRAACCOUNT.txt', 'a').write('')
     open('/sdcard/boostphere/FRAPAGES.txt', 'a').write('')
     open('/sdcard/boostphere/RPWACCOUNT.txt', 'a').write('')
