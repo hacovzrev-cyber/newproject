@@ -287,7 +287,7 @@ def share112():
     print(f"✅ SUCCESSFULLY SHARED: {shared_count}/{share_count}")
     print(f"⏳ TOTAL TIME: {total_time}")
     print(f"⏱️ AVERAGE TIME PER SHARE: {avg_time}")
-    linex()z
+    linex()
 
 def main():
     clear_screen()
