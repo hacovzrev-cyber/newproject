@@ -225,6 +225,21 @@ ICON = '➤ '
 ARRAY_ANIMATION = [f'{COLOR_BLUE}{ICON}{COLOR_GREEN}{ICON}{COLOR_YELLOW}{ICON}{COLOR_RED}{ICON}{COLOR_MAGENTA}{ICON}{COLOR_BLUE}{ICON}  ', f'   {COLOR_MAGENTA}{ICON}{COLOR_BLUE}{ICON}{COLOR_GREEN}{ICON}{COLOR_YELLOW}{ICON}{COLOR_RED}{ICON} ', f'    {COLOR_BLUE}{ICON}{COLOR_GREEN}{ICON}{COLOR_RED}{ICON}{COLOR_YELLOW}{ICON}{COLOR_MAGENTA}{ICON}']
 end='\033[0m'
 
+def clear_screen():
+    if 'termux' in platform.system().lower():
+        os.system('clear')
+    elif platform.system().lower() == 'windows':
+        os.system('cls')
+    else:
+        os.system('clear')
+        
+        
+
+
+
+    
+    
+
 def share112():
     clear()
     ethan()    
