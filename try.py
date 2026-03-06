@@ -306,16 +306,6 @@ def share112():
 
 def main():
     clear_screen()
-    open('/sdcard/boostphere/FRAACCOUNT.txt', 'a').write('')
-    open('/sdcard/boostphere/FRAPAGES.txt', 'a').write('')
-    open('/sdcard/boostphere/RPWACCOUNT.txt', 'a').write('')
-    open('/sdcard/boostphere/RPWACCOUNT.txt', 'a').write('')
-    fraaccounts_file = '/sdcard/boostphere/FRAACCOUNT.txt'
-    frapages_file = '/sdcard/boostphere/FRAPAGES.txt'
-    rpwaccounts = '/sdcard/boostphere/RPWACCOUNT.txt'
-    rpwpages = '/sdcard/boostphere/RPWPAGES.txt'
-    total_accounts, total_pages = count_tokens(fraaccounts_file, frapages_file)
-    total_account_rpw, total_pages_rpw = count_tokens(rpwaccounts,rpwpages)
     print(f"""                      ACCOUNT EXTRACTION OVERVIEW
  {blue}──────────────────────────────────────────────────────────────────────────────────────\033[0m
   {blue}     📤FRA ACCOUNT{yellow} : {green}{total_accounts}
