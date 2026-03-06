@@ -306,11 +306,6 @@ def share112():
 
 def main():
     clear_screen()
-    print(f"""                      ACCOUNT EXTRACTION OVERVIEW
- {blue}──────────────────────────────────────────────────────────────────────────────────────\033[0m
-  {blue}     📤FRA ACCOUNT{yellow} : {green}{total_accounts}
-  {blue}     📤RPW ACCOUNT{yellow} : {green}{total_account_rpw}
- {blue}──────────────────────────────────────────────────────────────────────────────────────\033[0m""")
     print(f'''  {blue}  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓''')
     print(f'''   {blue} ┃   {red}  No.       {white} ┃     {red}       Services       {white}     ┃  {red}      Status         {blue}       ┃ ''')
     print(f''' {blue}   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ ''')
@@ -338,6 +333,4 @@ def main():
         print(f"{red}Invalid choice, exiting.")
 
 if __name__ == "__main__":
-       #generate_and_check_code()
        main()
-   
