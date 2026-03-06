@@ -240,9 +240,7 @@ def clear_screen():
     
     
 
-def share112():
-    clear()
-    ethan()    
+def share112(): 
     access_token = input('ENTER THE TOKEN: ').strip()
     linex()
     share_url = input('ENTER THE FACEBOOK POST LINK: ').strip()
