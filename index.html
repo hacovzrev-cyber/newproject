@@ -1,95 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LCONRAD TRACK</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 
-body{
-font-family: Arial;
-background:#f4f4f4;
+*{
 margin:0;
 padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#f4f6fb;
+color:#333;
 }
 
 header{
-background:#111;
+background:#0f172a;
 color:white;
 text-align:center;
-padding:20px;
+padding:25px;
 font-size:28px;
-font-weight:bold;
+font-weight:600;
+letter-spacing:2px;
 }
 
 .container{
-width:90%;
-max-width:1000px;
+max-width:1100px;
 margin:auto;
-margin-top:30px;
+padding:20px;
 }
 
 .card{
 background:white;
-padding:20px;
+border-radius:10px;
+padding:25px;
 margin-bottom:20px;
-border-radius:8px;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
 }
 
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
+.search-box{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+.search-box input{
+flex:1;
+padding:12px;
+border-radius:6px;
 border:1px solid #ccc;
-border-radius:5px;
 }
 
-button{
-padding:10px 15px;
-background:#111;
-color:white;
+.search-box button{
+padding:12px 18px;
 border:none;
-border-radius:5px;
+background:#2563eb;
+color:white;
+border-radius:6px;
 cursor:pointer;
-margin-top:10px;
 }
 
-button:hover{
-background:#333;
+.search-box button:hover{
+background:#1d4ed8;
+}
+
+.stats{
+font-size:18px;
+margin-bottom:10px;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:15px;
 }
 
-th,td{
-padding:10px;
-border-bottom:1px solid #ddd;
+th{
+background:#f1f5f9;
+padding:12px;
 text-align:left;
 }
 
+td{
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
 .status{
-padding:5px 10px;
-border-radius:5px;
+padding:6px 12px;
+border-radius:20px;
 color:white;
 font-size:12px;
 }
 
-.pending{background:orange;}
-.progress{background:#3498db;}
-.completed{background:green;}
-.cancelled{background:red;}
+.pending{background:#f59e0b;}
+.progress{background:#3b82f6;}
+.completed{background:#16a34a;}
+.cancelled{background:#ef4444;}
 
-.stats{
-font-size:18px;
-font-weight:bold;
+.result{
+margin-top:15px;
+background:#f8fafc;
+padding:15px;
+border-radius:8px;
+}
+
+.footer{
+text-align:center;
+margin-top:30px;
+font-size:14px;
+color:#666;
+}
+
+.social-links{
+margin-top:10px;
+}
+
+.social-links a{
+text-decoration:none;
+margin:0 8px;
+background:#2563eb;
+color:white;
+padding:8px 15px;
+border-radius:20px;
+font-size:13px;
+}
+
+.social-links a:hover{
+background:#1d4ed8;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -101,13 +152,18 @@ LCONRAD TRACK
 <div class="container">
 
 <div class="card">
+
 <h3>Track Your Order</h3>
 
-<input type="text" id="trackInput" placeholder="Enter Order ID">
+<div class="search-box">
 
-<button onclick="trackOrder()">Track Order</button>
+<input id="orderInput" placeholder="Enter Order ID (Example: LC1001)">
 
-<p id="result"></p>
+<button onclick="trackOrder()">Track</button>
+
+</div>
+
+<div id="result"></div>
 
 </div>
 
@@ -115,53 +171,43 @@ LCONRAD TRACK
 <div class="card">
 
 <div class="stats">
-Total Orders: <span id="totalOrders">4</span>
+Total Orders: <span id="totalOrders"></span>
 </div>
 
 <table>
 
 <thead>
+
 <tr>
 <th>Order ID</th>
 <th>Quantity</th>
 <th>Date</th>
 <th>Status</th>
 </tr>
+
 </thead>
 
-<tbody id="orderTable">
-
-<tr>
-<td>LC1001</td>
-<td>2</td>
-<td>June 1 2026</td>
-<td><span class="status pending">Pending</span></td>
-</tr>
-
-<tr>
-<td>LC1002</td>
-<td>5</td>
-<td>June 3 2026</td>
-<td><span class="status progress">In Progress</span></td>
-</tr>
-
-<tr>
-<td>LC1003</td>
-<td>1</td>
-<td>June 5 2026</td>
-<td><span class="status completed">Completed</span></td>
-</tr>
-
-<tr>
-<td>LC1004</td>
-<td>3</td>
-<td>June 6 2026</td>
-<td><span class="status cancelled">Cancelled</span></td>
-</tr>
-
-</tbody>
+<tbody id="orderTable"></tbody>
 
 </table>
+
+</div>
+
+<div class="footer">
+
+LCONRAD TRACK • Order Tracking System
+
+<div class="social-links">
+
+<a href="https://facebook.com" target="_blank">Facebook</a>
+
+<a href="https://tiktok.com" target="_blank">TikTok</a>
+
+<a href="https://youtube.com" target="_blank">YouTube</a>
+
+<a href="https://instagram.com" target="_blank">Instagram</a>
+
+</div>
 
 </div>
 
@@ -169,38 +215,69 @@ Total Orders: <span id="totalOrders">4</span>
 
 <script>
 
+const orders=[
+
+{id:"LC1001",qty:2,date:"March 10 2026",status:"Pending"},
+{id:"LC1002",qty:5,date:"March 11 2026",status:"In Progress"},
+{id:"LC1003",qty:1,date:"March 12 2026",status:"Completed"},
+{id:"LC1004",qty:3,date:"March 13 2026",status:"Cancelled"}
+
+];
+
+const table=document.getElementById("orderTable");
+
+orders.forEach(o=>{
+
+let cls="";
+
+if(o.status==="Pending") cls="pending";
+if(o.status==="In Progress") cls="progress";
+if(o.status==="Completed") cls="completed";
+if(o.status==="Cancelled") cls="cancelled";
+
+table.innerHTML+=`
+
+<tr>
+<td>${o.id}</td>
+<td>${o.qty}</td>
+<td>${o.date}</td>
+<td><span class="status ${cls}">${o.status}</span></td>
+</tr>
+
+`;
+
+});
+
+document.getElementById("totalOrders").innerText=orders.length;
+
 function trackOrder(){
 
-let input = document.getElementById("trackInput").value.toUpperCase();
+let input=document.getElementById("orderInput").value.toUpperCase();
 
-let table = document.getElementById("orderTable").rows;
+let result=document.getElementById("result");
 
-let found = false;
+let order=orders.find(o=>o.id===input);
 
-for(let i=0;i<table.length;i++){
+if(order){
 
-let orderID = table[i].cells[0].innerText;
+result.innerHTML=`
 
-if(orderID === input){
+<div class="result">
 
-let qty = table[i].cells[1].innerText;
-let date = table[i].cells[2].innerText;
-let status = table[i].cells[3].innerText;
+<strong>Order Found</strong><br><br>
 
-document.getElementById("result").innerHTML =
-"<b>Order Found</b><br>Quantity: "+qty+
-"<br>Date: "+date+
-"<br>Status: "+status;
+Order ID: ${order.id}<br>
+Quantity: ${order.qty}<br>
+Date: ${order.date}<br>
+Status: ${order.status}
 
-found = true;
+</div>
 
-}
+`;
 
-}
+}else{
 
-if(!found){
-
-document.getElementById("result").innerHTML = "Order ID not found.";
+result.innerHTML=`<div class="result">Order not found.</div>`;
 
 }
 
