@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LCONRAD TRACK</title>
+<title>LCONRAD ADMIN PANEL</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -20,123 +19,103 @@ font-family:'Poppins',sans-serif;
 }
 
 body{
-background:#f4f6fb;
+display:flex;
+background:#f1f4f9;
 color:#333;
 }
 
-header{
+/* SIDEBAR */
+
+.sidebar{
+width:230px;
+height:100vh;
 background:#0f172a;
 color:white;
-text-align:center;
-padding:25px;
-font-size:28px;
-font-weight:600;
-letter-spacing:2px;
-}
-
-.container{
-max-width:1100px;
-margin:auto;
 padding:20px;
 }
 
+.sidebar h2{
+margin-bottom:30px;
+font-size:20px;
+}
+
+.sidebar a{
+display:block;
+color:white;
+text-decoration:none;
+padding:10px;
+border-radius:6px;
+margin-bottom:5px;
+}
+
+.sidebar a:hover{
+background:#1e293b;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+padding:25px;
+}
+
+/* CARDS */
+
 .card{
 background:white;
+padding:20px;
 border-radius:10px;
-padding:25px;
-margin-bottom:20px;
 box-shadow:0 5px 15px rgba(0,0,0,0.08);
+margin-bottom:20px;
 }
 
-.search-box{
-display:flex;
-gap:10px;
-margin-top:15px;
-}
+/* INPUTS */
 
-.search-box input{
-flex:1;
-padding:12px;
-border-radius:6px;
+input{
+padding:10px;
+margin:5px 0;
+width:100%;
 border:1px solid #ccc;
+border-radius:6px;
 }
 
-.search-box button{
-padding:12px 18px;
+button{
+padding:10px 15px;
 border:none;
 background:#2563eb;
 color:white;
 border-radius:6px;
 cursor:pointer;
+margin-top:5px;
 }
 
-.search-box button:hover{
+button:hover{
 background:#1d4ed8;
 }
 
-.stats{
-font-size:18px;
-margin-bottom:10px;
-}
+/* TABLE */
 
 table{
 width:100%;
 border-collapse:collapse;
-}
-
-th{
-background:#f1f5f9;
-padding:12px;
-text-align:left;
-}
-
-td{
-padding:12px;
-border-bottom:1px solid #eee;
-}
-
-.status{
-padding:6px 12px;
-border-radius:20px;
-color:white;
-font-size:12px;
-}
-
-.pending{background:#f59e0b;}
-.progress{background:#3b82f6;}
-.completed{background:#16a34a;}
-.cancelled{background:#ef4444;}
-
-.result{
-margin-top:15px;
-background:#f8fafc;
-padding:15px;
-border-radius:8px;
-}
-
-.footer{
-text-align:center;
-margin-top:30px;
-font-size:14px;
-color:#666;
-}
-
-.social-links{
 margin-top:10px;
 }
 
-.social-links a{
-text-decoration:none;
-margin:0 8px;
-background:#2563eb;
-color:white;
-padding:8px 15px;
-border-radius:20px;
-font-size:13px;
+th,td{
+padding:10px;
+border-bottom:1px solid #eee;
+text-align:left;
 }
 
-.social-links a:hover{
-background:#1d4ed8;
+/* DARK MODE */
+
+.dark{
+background:#0f172a;
+color:white;
+}
+
+.dark .card{
+background:#1e293b;
 }
 
 </style>
@@ -145,69 +124,101 @@ background:#1d4ed8;
 
 <body>
 
-<header>
-LCONRAD TRACK
-</header>
+<div class="sidebar">
 
-<div class="container">
+<h2>LCONRAD ADMIN</h2>
+
+<a href="#">Dashboard</a>
+<a href="#">Services</a>
+<a href="#">Add Funds</a>
+<a href="#">Users</a>
+<a href="#">Theme</a>
+
+</div>
+
+<div class="main">
 
 <div class="card">
 
-<h3>Track Your Order</h3>
+<h3>Dashboard</h3>
+<p>Manage your boosting site here.</p>
 
-<div class="search-box">
-
-<input id="orderInput" placeholder="Enter Order ID (Example: LC1001)">
-
-<button onclick="trackOrder()">Track</button>
-
-</div>
-
-<div id="result"></div>
+<button onclick="toggleTheme()">Toggle Dark / Light Theme</button>
 
 </div>
 
 
 <div class="card">
 
-<div class="stats">
-Total Orders: <span id="totalOrders"></span>
-</div>
+<h3>Services</h3>
+
+<input id="serviceName" placeholder="Service Name">
+<input id="servicePrice" placeholder="Price">
+
+<button onclick="addService()">Add Service</button>
 
 <table>
 
 <thead>
-
 <tr>
-<th>Order ID</th>
-<th>Quantity</th>
-<th>Date</th>
-<th>Status</th>
+<th>Service</th>
+<th>Price</th>
 </tr>
-
 </thead>
 
-<tbody id="orderTable"></tbody>
+<tbody id="servicesTable"></tbody>
 
 </table>
 
 </div>
 
-<div class="footer">
 
-LCONRAD TRACK • Order Tracking System
+<div class="card">
 
-<div class="social-links">
+<h3>Add Funds</h3>
 
-<a href="https://facebook.com" target="_blank">Facebook</a>
+<input id="fundUser" placeholder="Username">
+<input id="fundAmount" placeholder="Amount">
 
-<a href="https://tiktok.com" target="_blank">TikTok</a>
+<button onclick="addFunds()">Add Funds</button>
 
-<a href="https://youtube.com" target="_blank">YouTube</a>
+<table>
 
-<a href="https://instagram.com" target="_blank">Instagram</a>
+<thead>
+<tr>
+<th>User</th>
+<th>Amount</th>
+</tr>
+</thead>
+
+<tbody id="fundsTable"></tbody>
+
+</table>
 
 </div>
+
+
+<div class="card">
+
+<h3>Users</h3>
+
+<input id="username" placeholder="Username">
+<input id="email" placeholder="Email">
+
+<button onclick="addUser()">Add User</button>
+
+<table>
+
+<thead>
+<tr>
+<th>Username</th>
+<th>Email</th>
+</tr>
+</thead>
+
+<tbody id="usersTable"></tbody>
+
+</table>
 
 </div>
 
@@ -215,71 +226,63 @@ LCONRAD TRACK • Order Tracking System
 
 <script>
 
-const orders=[
+/* THEME */
 
-{id:"LC1001",qty:2,date:"March 10 2026",status:"Pending"},
-{id:"LC1002",qty:5,date:"March 11 2026",status:"In Progress"},
-{id:"LC1003",qty:1,date:"March 12 2026",status:"Completed"},
-{id:"LC1004",qty:3,date:"March 13 2026",status:"Cancelled"}
+function toggleTheme(){
+document.body.classList.toggle("dark");
+}
 
-];
+/* SERVICES */
 
-const table=document.getElementById("orderTable");
+function addService(){
 
-orders.forEach(o=>{
+let name=document.getElementById("serviceName").value;
+let price=document.getElementById("servicePrice").value;
 
-let cls="";
-
-if(o.status==="Pending") cls="pending";
-if(o.status==="In Progress") cls="progress";
-if(o.status==="Completed") cls="completed";
-if(o.status==="Cancelled") cls="cancelled";
+let table=document.getElementById("servicesTable");
 
 table.innerHTML+=`
-
 <tr>
-<td>${o.id}</td>
-<td>${o.qty}</td>
-<td>${o.date}</td>
-<td><span class="status ${cls}">${o.status}</span></td>
+<td>${name}</td>
+<td>${price}</td>
 </tr>
-
 `;
-
-});
-
-document.getElementById("totalOrders").innerText=orders.length;
-
-function trackOrder(){
-
-let input=document.getElementById("orderInput").value.toUpperCase();
-
-let result=document.getElementById("result");
-
-let order=orders.find(o=>o.id===input);
-
-if(order){
-
-result.innerHTML=`
-
-<div class="result">
-
-<strong>Order Found</strong><br><br>
-
-Order ID: ${order.id}<br>
-Quantity: ${order.qty}<br>
-Date: ${order.date}<br>
-Status: ${order.status}
-
-</div>
-
-`;
-
-}else{
-
-result.innerHTML=`<div class="result">Order not found.</div>`;
 
 }
+
+/* FUNDS */
+
+function addFunds(){
+
+let user=document.getElementById("fundUser").value;
+let amount=document.getElementById("fundAmount").value;
+
+let table=document.getElementById("fundsTable");
+
+table.innerHTML+=`
+<tr>
+<td>${user}</td>
+<td>${amount}</td>
+</tr>
+`;
+
+}
+
+/* USERS */
+
+function addUser(){
+
+let username=document.getElementById("username").value;
+let email=document.getElementById("email").value;
+
+let table=document.getElementById("usersTable");
+
+table.innerHTML+=`
+<tr>
+<td>${username}</td>
+<td>${email}</td>
+</tr>
+`;
 
 }
 
@@ -287,3 +290,4 @@ result.innerHTML=`<div class="result">Order not found.</div>`;
 
 </body>
 </html>
+```
