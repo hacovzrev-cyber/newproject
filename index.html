@@ -1,967 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracking Dashboard</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #6366f1;
-            --pending: #f59e0b;
-            --progress: #3b82f6;
-            --completed: #10b981;
-            --danger: #ef4444;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(-30px, -30px) rotate(120deg); }
-            66% { transform: translate(30px, -20px) rotate(240deg); }
-        }
-
-        /* Header */
-        header {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .stats-bar {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Controls */
-        .controls {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 0.5rem;
-            background: var(--bg-secondary);
-            padding: 0.5rem;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .filter-btn.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .filter-btn:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal h2 {
-            color: var(--text-primary);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-
-        .service-option {
-            padding: 1rem;
-            background: var(--bg-card);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .service-option:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .service-option.selected {
-            border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.2);
-        }
-
-        .service-option i {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .service-option.facebook i { color: #1877f2; }
-        .service-option.instagram i { color: #e4405f; }
-        .service-option.tiktok i { color: #ff0050; }
-        .service-option.youtube i { color: #ff0000; }
-
-        /* Orders Grid */
-        .orders-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .order-card {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .order-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--status-color);
-        }
-
-        .order-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 1rem;
-        }
-
-        .order-id {
-            font-weight: bold;
-            color: var(--accent);
-            font-size: 0.9rem;
-        }
-
-        .status-badge {
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background: var(--status-bg);
-            color: var(--status-color);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .status-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .service-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .service-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            background: var(--service-bg);
-            color: var(--service-color);
-        }
-
-        .service-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .service-category {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .order-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .detail-item {
-            background: var(--bg-card);
-            padding: 0.75rem;
-            border-radius: 10px;
-        }
-
-        .detail-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-        }
-
-        .detail-value {
-            font-weight: 600;
-            color: var(--text-primary);
-            word-break: break-all;
-        }
-
-        .url-section {
-            background: var(--bg-card);
-            padding: 0.75rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-
-        .url-text {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            word-break: break-all;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .url-text a {
-            color: var(--accent);
-            text-decoration: none;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .url-text a:hover {
-            text-decoration: underline;
-        }
-
-        .order-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-small {
-            flex: 1;
-            padding: 0.6rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-        }
-
-        .btn-edit {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-        }
-
-        .btn-edit:hover {
-            background: rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-        }
-
-        .btn-delete:hover {
-            background: rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-status {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-
-        .btn-status:hover {
-            background: rgba(16, 185, 129, 0.3);
-        }
-
-        /* Empty State */
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* Status Colors */
-        .status-pending { --status-bg: rgba(245, 158, 11, 0.2); --status-color: #f59e0b; }
-        .status-progress { --status-bg: rgba(59, 130, 246, 0.2); --status-color: #3b82f6; }
-        .status-completed { --status-bg: rgba(16, 185, 129, 0.2); --status-color: #10b981; }
-
-        /* Service Colors */
-        .service-facebook { --service-bg: rgba(24, 119, 242, 0.2); --service-color: #1877f2; }
-        .service-instagram { --service-bg: rgba(228, 64, 95, 0.2); --service-color: #e4405f; }
-        .service-tiktok { --service-bg: rgba(255, 0, 80, 0.2); --service-color: #ff0050; }
-        .service-youtube { --service-bg: rgba(255, 0, 0, 0.2); --service-color: #ff0000; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .orders-container {
-                grid-template-columns: 1fr;
-                padding: 0 1rem 2rem;
-            }
-            
-            .controls {
-                padding: 0 1rem;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Progress Bar for In Progress */
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: var(--bg-card);
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--progress), #8b5cf6);
-            border-radius: 2px;
-            animation: progress 2s ease-in-out infinite;
-            width: 60%;
-        }
-
-        @keyframes progress {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(200%); }
-        }
-
-        .quantity-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            background: var(--accent);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LCONRAD TRACK</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f4f4;
+margin:0;
+padding:0;
+}
+
+header{
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+width:90%;
+max-width:1000px;
+margin:auto;
+margin-top:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:8px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+padding:10px 15px;
+background:#111;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:hover{
+background:#333;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+.status{
+padding:5px 10px;
+border-radius:5px;
+color:white;
+font-size:12px;
+}
+
+.pending{background:orange;}
+.progress{background:#3498db;}
+.completed{background:green;}
+.cancelled{background:red;}
+
+.stats{
+font-size:18px;
+font-weight:bold;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="bg-animation"></div>
 
-    <header>
-        <div class="header-content">
-            <h1><i class="fas fa-box-open"></i> Order Tracker</h1>
-            <div class="stats-bar">
-                <div class="stat-item">
-                    <div class="stat-value" id="totalOrders">0</div>
-                    <div class="stat-label">Total Orders</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="pendingCount">0</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="progressCount">0</div>
-                    <div class="stat-label">In Progress</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="completedCount">0</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-            </div>
-        </div>
-    </header>
+<header>
+LCONRAD TRACK
+</header>
 
-    <div class="controls">
-        <button class="btn btn-primary" onclick="openModal()">
-            <i class="fas fa-plus"></i> New Order
-        </button>
-        
-        <div class="filter-group">
-            <button class="filter-btn active" onclick="filterOrders('all')">All</button>
-            <button class="filter-btn" onclick="filterOrders('pending')">Pending</button>
-            <button class="filter-btn" onclick="filterOrders('progress')">In Progress</button>
-            <button class="filter-btn" onclick="filterOrders('completed')">Completed</button>
-        </div>
+<div class="container">
 
-        <div class="filter-group">
-            <button class="filter-btn active" onclick="filterService('all')">All Services</button>
-            <button class="filter-btn" onclick="filterService('facebook')"><i class="fab fa-facebook-f"></i></button>
-            <button class="filter-btn" onclick="filterService('instagram')"><i class="fab fa-instagram"></i></button>
-            <button class="filter-btn" onclick="filterService('tiktok')"><i class="fab fa-tiktok"></i></button>
-            <button class="filter-btn" onclick="filterService('youtube')"><i class="fab fa-youtube"></i></button>
-        </div>
-    </div>
+<div class="card">
+<h3>Track Your Order</h3>
 
-    <div class="orders-container" id="ordersContainer">
-        <!-- Orders will be injected here -->
-    </div>
+<input type="text" id="trackInput" placeholder="Enter Order ID">
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modalTitle">New Order</h2>
-                <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            </div>
-            
-            <form id="orderForm" onsubmit="saveOrder(event)">
-                <input type="hidden" id="orderId">
-                
-                <div class="form-group">
-                    <label>Service Platform</label>
-                    <div class="service-grid">
-                        <div class="service-option" onclick="selectService('facebook')" data-service="facebook">
-                            <i class="fab fa-facebook"></i>
-                            <div>Facebook</div>
-                        </div>
-                        <div class="service-option" onclick="selectService('instagram')" data-service="instagram">
-                            <i class="fab fa-instagram"></i>
-                            <div>Instagram</div>
-                        </div>
-                        <div class="service-option" onclick="selectService('tiktok')" data-service="tiktok">
-                            <i class="fab fa-tiktok"></i>
-                            <div>TikTok</div>
-                        </div>
-                        <div class="service-option" onclick="selectService('youtube')" data-service="youtube">
-                            <i class="fab fa-youtube"></i>
-                            <div>YouTube</div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="service" required>
-                </div>
+<button onclick="trackOrder()">Track Order</button>
 
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="status" required>
-                        <option value="pending">⏳ Pending</option>
-                        <option value="progress">🔄 In Progress</option>
-                        <option value="completed">✅ Completed</option>
-                    </select>
-                </div>
+<p id="result"></p>
 
-                <div class="form-group">
-                    <label>Quantity</label>
-                    <input type="number" id="quantity" min="1" placeholder="e.g., 1000" required>
-                </div>
+</div>
 
-                <div class="form-group">
-                    <label>URL</label>
-                    <input type="url" id="url" placeholder="https://..." required>
-                </div>
 
-                <div class="form-group">
-                    <label>Description (Optional)</label>
-                    <input type="text" id="description" placeholder="e.g., Followers, Likes, Views">
-                </div>
+<div class="card">
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
-                    <i class="fas fa-save"></i> Save Order
-                </button>
-            </form>
-        </div>
-    </div>
+<div class="stats">
+Total Orders: <span id="totalOrders">4</span>
+</div>
 
-    <script>
-        // Data Management
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        let currentFilter = 'all';
-        let currentServiceFilter = 'all';
-        let editingId = null;
+<table>
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderOrders();
-            updateStats();
-        });
+<thead>
+<tr>
+<th>Order ID</th>
+<th>Quantity</th>
+<th>Date</th>
+<th>Status</th>
+</tr>
+</thead>
 
-        // Service Selection
-        function selectService(service) {
-            document.querySelectorAll('.service-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`[data-service="${service}"]`).classList.add('selected');
-            document.getElementById('service').value = service;
-        }
+<tbody id="orderTable">
 
-        // Modal Functions
-        function openModal(orderId = null) {
-            const modal = document.getElementById('modal');
-            const form = document.getElementById('orderForm');
-            const title = document.getElementById('modalTitle');
-            
-            editingId = orderId;
-            
-            if (orderId) {
-                const order = orders.find(o => o.id === orderId);
-                title.textContent = 'Edit Order';
-                document.getElementById('status').value = order.status;
-                document.getElementById('quantity').value = order.quantity;
-                document.getElementById('url').value = order.url;
-                document.getElementById('description').value = order.description || '';
-                selectService(order.service);
-            } else {
-                title.textContent = 'New Order';
-                form.reset();
-                document.querySelectorAll('.service-option').forEach(el => el.classList.remove('selected'));
-                document.getElementById('service').value = '';
-            }
-            
-            modal.classList.add('active');
-        }
+<tr>
+<td>LC1001</td>
+<td>2</td>
+<td>June 1 2026</td>
+<td><span class="status pending">Pending</span></td>
+</tr>
 
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-            editingId = null;
-        }
+<tr>
+<td>LC1002</td>
+<td>5</td>
+<td>June 3 2026</td>
+<td><span class="status progress">In Progress</span></td>
+</tr>
 
-        // Save Order
-        function saveOrder(e) {
-            e.preventDefault();
-            
-            const service = document.getElementById('service').value;
-            if (!service) {
-                alert('Please select a service platform');
-                return;
-            }
+<tr>
+<td>LC1003</td>
+<td>1</td>
+<td>June 5 2026</td>
+<td><span class="status completed">Completed</span></td>
+</tr>
 
-            const orderData = {
-                id: editingId || Date.now().toString(),
-                service: service,
-                status: document.getElementById('status').value,
-                quantity: parseInt(document.getElementById('quantity').value),
-                url: document.getElementById('url').value,
-                description: document.getElementById('description').value,
-                date: editingId ? orders.find(o => o.id === editingId).date : new Date().toISOString()
-            };
+<tr>
+<td>LC1004</td>
+<td>3</td>
+<td>June 6 2026</td>
+<td><span class="status cancelled">Cancelled</span></td>
+</tr>
 
-            if (editingId) {
-                const index = orders.findIndex(o => o.id === editingId);
-                orders[index] = orderData;
-            } else {
-                orders.push(orderData);
-            }
+</tbody>
 
-            localStorage.setItem('orders', JSON.stringify(orders));
-            closeModal();
-            renderOrders();
-            updateStats();
-        }
+</table>
 
-        // Delete Order
-        function deleteOrder(id) {
-            if (confirm('Are you sure you want to delete this order?')) {
-                orders = orders.filter(o => o.id !== id);
-                localStorage.setItem('orders', JSON.stringify(orders));
-                renderOrders();
-                updateStats();
-            }
-        }
+</div>
 
-        // Quick Status Update
-        function cycleStatus(id) {
-            const order = orders.find(o => o.id === id);
-            const statuses = ['pending', 'progress', 'completed'];
-            const currentIndex = statuses.indexOf(order.status);
-            const nextStatus = statuses[(currentIndex + 1) % statuses.length];
-            
-            order.status = nextStatus;
-            localStorage.setItem('orders', JSON.stringify(orders));
-            renderOrders();
-            updateStats();
-        }
+</div>
 
-        // Filter Functions
-        function filterOrders(status) {
-            currentFilter = status;
-            document.querySelectorAll('.controls .filter-group:first-of-type .filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            renderOrders();
-        }
+<script>
 
-        function filterService(service) {
-            currentServiceFilter = service;
-            // Update active state for service filters
-            const buttons = document.querySelectorAll('.controls .filter-group:last-of-type .filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderOrders();
-        }
+function trackOrder(){
 
-        // Render Orders
-        function renderOrders() {
-            const container = document.getElementById('ordersContainer');
-            
-            let filteredOrders = orders;
-            
-            if (currentFilter !== 'all') {
-                filteredOrders = filteredOrders.filter(o => o.status === currentFilter);
-            }
-            
-            if (currentServiceFilter !== 'all') {
-                filteredOrders = filteredOrders.filter(o => o.service === currentServiceFilter);
-            }
+let input = document.getElementById("trackInput").value.toUpperCase();
 
-            if (filteredOrders.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h3>No orders found</h3>
-                        <p>Create a new order to get started</p>
-                    </div>
-                `;
-                return;
-            }
+let table = document.getElementById("orderTable").rows;
 
-            container.innerHTML = filteredOrders.map(order => {
-                const serviceIcons = {
-                    facebook: 'fa-facebook-f',
-                    instagram: 'fa-instagram',
-                    tiktok: 'fa-tiktok',
-                    youtube: 'fa-youtube'
-                };
+let found = false;
 
-                const statusLabels = {
-                    pending: 'Pending',
-                    progress: 'In Progress',
-                    completed: 'Completed'
-                };
+for(let i=0;i<table.length;i++){
 
-                const date = new Date(order.date).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
+let orderID = table[i].cells[0].innerText;
 
-                return `
-                    <div class="order-card status-${order.status} service-${order.service}">
-                        <div class="order-header">
-                            <span class="order-id">#${order.id.slice(-6).toUpperCase()}</span>
-                            <span class="status-badge">${statusLabels[order.status]}</span>
-                        </div>
+if(orderID === input){
 
-                        <div class="service-info">
-                            <div class="service-icon">
-                                <i class="fab ${serviceIcons[order.service]}"></i>
-                            </div>
-                            <div>
-                                <div class="service-name">${order.service.charAt(0).toUpperCase() + order.service.slice(1)}</div>
-                                <div class="service-category">${order.description || 'Social Media Service'}</div>
-                            </div>
-                        </div>
+let qty = table[i].cells[1].innerText;
+let date = table[i].cells[2].innerText;
+let status = table[i].cells[3].innerText;
 
-                        <div class="order-details">
-                            <div class="detail-item">
-                                <div class="detail-label">Quantity</div>
-                                <div class="detail-value">
-                                    <span class="quantity-badge">
-                                        <i class="fas fa-layer-group"></i> ${order.quantity.toLocaleString()}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Date</div>
-                                <div class="detail-value">${date}</div>
-                            </div>
-                        </div>
+document.getElementById("result").innerHTML =
+"<b>Order Found</b><br>Quantity: "+qty+
+"<br>Date: "+date+
+"<br>Status: "+status;
 
-                        <div class="url-section">
-                            <div class="detail-label">Target URL</div>
-                            <div class="url-text">
-                                <i class="fas fa-link"></i>
-                                <a href="${order.url}" target="_blank" title="${order.url}">${order.url}</a>
-                            </div>
-                            ${order.status === 'progress' ? '<div class="progress-bar"><div class="progress-fill"></div></div>' : ''}
-                        </div>
+found = true;
 
-                        <div class="order-actions">
-                            <button class="btn-small btn-status" onclick="cycleStatus('${order.id}')" title="Change Status">
-                                <i class="fas fa-sync-alt"></i> Status
-                            </button>
-                            <button class="btn-small btn-edit" onclick="openModal('${order.id}')">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn-small btn-delete" onclick="deleteOrder('${order.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+}
 
-        // Update Statistics
-        function updateStats() {
-            document.getElementById('totalOrders').textContent = orders.length;
-            document.getElementById('pendingCount').textContent = orders.filter(o => o.status === 'pending').length;
-            document.getElementById('progressCount').textContent = orders.filter(o => o.status === 'progress').length;
-            document.getElementById('completedCount').textContent = orders.filter(o => o.status === 'completed').length;
-        }
+}
 
-        // Close modal on outside click
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('modal')) {
-                closeModal();
-            }
-        });
-    </script>
+if(!found){
+
+document.getElementById("result").innerHTML = "Order ID not found.";
+
+}
+
+}
+
+</script>
+
 </body>
 </html>
