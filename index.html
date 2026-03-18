@@ -1,11 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🚀 Boostify Link Fixer - Install Extension</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --shadow-light: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-heavy: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,170 +26,506 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-gradient);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: #333;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
-            flex: 1;
         }
 
+        /* Header */
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 3rem;
+            padding: 4rem 0;
+            position: relative;
         }
 
-        .header h1 {
-            font-size: 3rem;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 100%;
+            background: inherit;
+            z-index: -1;
+        }
+
+        .logo {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, white 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        .header p {
-            font-size: 1.3rem;
-            opacity: 0.9;
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(255,255,255,0.5)); }
         }
 
-        .install-card {
-            background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        .header-subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: rgba(255,255,255,0.9);
             margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem 2rem;
             text-align: center;
+            box-shadow: var(--shadow-heavy);
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .install-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
         }
 
         .install-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-            color: white;
-            border: none;
-            padding: 1.2rem 3rem;
-            font-size: 1.3rem;
-            font-weight: bold;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 1rem;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-chrome {
+            background: var(--secondary-gradient);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+        }
+
+        .btn-firefox {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 10px 30px rgba(79,172,254,0.3);
         }
 
         .install-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(255,107,107,0.4);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .install-btn:active {
+            transform: translateY(-2px) scale(1);
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.3);
+        }
+
+        /* Steps Section */
+        .steps-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
         }
 
         .steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin: 3rem 0;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .step {
-            background: rgba(255,255,255,0.95);
-            padding: 2rem;
-            border-radius: 15px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .step:hover {
-            transform: translateY(-10px);
+            padding: 2rem;
         }
 
         .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 70px;
+            height: 70px;
+            background: var(--secondary-gradient);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
         }
 
+        /* Demo Section */
         .demo-section {
-            background: #f8f9fa;
-            padding: 3rem;
-            border-radius: 20px;
-            margin: 2rem 0;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+            text-align: center;
+            box-shadow: var(--shadow-heavy);
         }
 
         .demo-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 2rem auto 0;
         }
 
         .demo-link {
-            padding: 1rem 2rem;
+            padding: 1.5rem 2rem;
             background: white;
-            border-radius: 10px;
+            border-radius: 16px;
             text-decoration: none;
-            color: #333;
+            color: var(--text-primary);
             font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
             position: relative;
+            border: 2px solid transparent;
         }
 
         .demo-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--primary-gradient);
         }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .feature {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .feature i {
-            font-size: 3rem;
-            color: #667eea;
-            margin-bottom: 1rem;
-        }
-
+        /* Code Section */
         .code-section {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: var(--dark-bg);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: white;
         }
 
         .code-block {
-            background: #2d3748;
-            color: #a0aec0;
+            background: #1e1e1e;
+            color: #d4d4d4;
             padding: 2rem;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: 1rem;
+            border-radius: 16px;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 1.7;
             overflow-x: auto;
+            border: 1px solid #333;
             max-height: 400px;
         }
 
-        .footer
+        /* Footer */
+        .footer {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(20px);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: white;
+            transform: translateY(-2px);
+            color: var(--dark-bg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .install-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-section,
+            .demo-section,
+            .steps-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Scroll animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">🚀 Boostify</h1>
+            <p class="header-subtitle">
+                Fix broken links instantly. Boost your browsing experience with one click.
+            </p>
+        </header>
+
+        <!-- CTA Section -->
+        <section class="cta-section animate-on-scroll">
+            <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+                Install in 30 Seconds
+            </h2>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem;">
+                Works on all major browsers. No setup required.
+            </p>
+            <div class="install-buttons">
+                <a href="#" class="install-btn btn-chrome">
+                    <i class="fab fa-chrome"></i>
+                    Add to Chrome
+                </a>
+                <a href="#" class="install-btn btn-firefox">
+                    <i class="fab fa-firefox-browser"></i>
+                    Add to Firefox
+                </a>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Auto Fix Links</h3>
+                <p>Automatically detects and fixes broken links across all websites.</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 style="1.5rem; font-weight: 700; margin-bottom: 1rem;">Lightning Fast</h3>
+                <p>Zero performance impact. Works instantly in the background.</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 style="1.5rem; font-weight: 700; margin-bottom: 1rem;">Privacy First</h3>
+                <p>No data collection. Everything stays on your device.</p>
+            </div>
+        </section>
+
+        <!-- Steps -->
+        <section class="steps-section">
+            <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: white; margin-bottom: 3rem;">
+                How It Works
+            </h2>
+            <div class="steps">
+                <div class="step animate-on-scroll">
+                    <div class="step-number">1</div>
+                    <h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem;">Install Extension</h3>
+                    <p>Click install and add to your browser. Takes 10 seconds.</p>
+                </div>
+                <div class="step animate-on-scroll">
+                    <div class="step-number">2</div>
+                    <h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem;">Browse Normally</h3>
+                    <p>Works automatically on every website you visit.</p>
+                </div>
+                <div class="step animate-on-scroll">
+                    <div class="step-number">3</div>
+                    <h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem;">Links Fixed!</h3>
+                    <p>Broken links are automatically repaired. No manual work needed.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo -->
+        <section class="demo-section animate-on-scroll">
+            <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">
+                See It In Action
+            </h2>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                Try these broken links - watch them get fixed automatically:
+            </p>
+            <div class="demo-links">
+                <a href="#" class="demo-link">
+                    <i class="fas fa-link" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    http://broken-link-example.com
+                </a>
+                <a href="#" class="demo-link">
+                    <i class="fas fa-link" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    https://expired-domain.net/old-page
+                </a>
+                <a href="#" class="demo-link">
+                    <i class="fas fa-link" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    http://404-error-page.com/missing
+                </a>
+            </div>
+        </section>
+
+        <!-- Code Preview -->
+        <section class="code-section animate-on-scroll">
+            <div class="code-header">
+                <i class="fas fa-code" style="font-size: 1.5rem;"></i>
+                <h3 style="font-size: 1.4rem; font-weight: 600;">Simple & Clean Code</h3>
+            </div>
+            <pre class="code-block">// Boostify Link Fixer - Core Logic
+const BOOSTIFY = {
+    init() {
+        this.observeLinks();
+        this.setupMutationObserver();
+    },
+    
+    fixLink(url) {
+        // AI-powered link analysis & repair
+        return this.aiRepair(url);
+    },
+    
+    observeLinks() {
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && this.isBroken(link.href)) {
+                e.preventDefault();
+                link.href = this.fixLink(link.href);
+            }
+        });
+    }
+};
+
+BOOSTIFY.init();</pre>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem;">
